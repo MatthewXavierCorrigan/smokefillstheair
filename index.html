@@ -1,24 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-IE">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+<title>Smoke Fills the Air</title>
+<style>
+  /* ============================================================
+     Settings: change colours and sizes here
+     ============================================================ */
+  :root {
+    --orange: #fe7b2c;  /* page background */
+    --blue:   #0a5edc;  /* brand blue: logo + keyboard focus outline */
+    --white:  #ffffff;  /* text + lines */
+    --column: 680px;    /* widest the logo column and releases table can get */
+    --line:   1px;      /* thickness of the lines in the releases table */
+  }
+
+  /* ============================================================
+     Page (phones and tablets: one centred column)
+     ============================================================ */
+  * { box-sizing: border-box; }
+
+  html {
+    background: var(--orange);
+    color: var(--white);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.45;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(32px, 8vh, 88px) clamp(16px, 4vw, 64px) clamp(20px, 4vh, 36px);
+  }
+
+  header, main { width: min(var(--column), 100%); }
+
+  a { color: var(--white); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  a:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+
+  /* ============================================================
+     Logo (never narrower than 350px)
+     ============================================================ */
+  .logo {
+    margin: 0;
+    /* on very small screens, let the logo reach past the page margins */
+    margin-inline: min(0px, calc((100% - 350px) / 2));
+  }
+  .logo img { display: block; width: 100%; height: auto; }
+
+  /* ============================================================
+     Copy
+     ============================================================ */
+  .copy { margin-top: clamp(32px, 6vh, 56px); }
+  .copy p { margin: 0 0 1em; }
+
+  /* ============================================================
+     Releases table
+     ============================================================ */
+  .releases {
+    width: 100%;
+    margin-top: clamp(32px, 6vh, 56px);
+    border-collapse: separate;
+    border-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .releases th,
+  .releases td {
+    padding: 1.4em 1em 0.3em 0;
+    border-bottom: var(--line) solid var(--white);
+    text-align: left;
+    vertical-align: bottom;
+  }
+  .releases th {
+    padding-top: 0;
+    padding-bottom: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+  .releases .cat { font-weight: 700; white-space: nowrap; }
+  .releases .date { padding-right: 0; text-align: right; white-space: nowrap; }
+  .releases td a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  /* Phones: each release becomes a small block
+       SMOKE-001          2026-11-16
+       artist
+       title                              */
+  @media (max-width: 600px) {
+    .releases thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .releases tr {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "cat    date"
+        "artist artist"
+        "title  title";
+      padding: 1.4em 0 0.3em;
+      border-bottom: var(--line) solid var(--white);
+    }
+    .releases td { padding: 0; border: 0; }
+    .releases .cat    { grid-area: cat; }
+    .releases .artist { grid-area: artist; }
+    .releases .title  { grid-area: title; }
+    .releases .date   { grid-area: date; }
+  }
+
+  /* ============================================================
+     Footer: contact + Instagram
+     ============================================================ */
+  footer {
+    margin-top: auto;
+    padding-top: clamp(48px, 9vh, 96px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .contact {
+    margin: 0;
+    font-size: clamp(15px, 1.4vw, 18px);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+  .contact a { white-space: nowrap; }
+  .instagram {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ============================================================
+     Desktop: releases on the left; logo, copy and contact on the right
+     ============================================================ */
+  @media (min-width: 1200px) {
+    body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, var(--column)));
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "releases intro"
+        "releases footer";
+      justify-content: space-between;
+      align-items: start;
+      column-gap: clamp(48px, 6vw, 120px);
+      /* on very wide screens, stop the two columns drifting further apart */
+      padding-inline: max(clamp(16px, 4vw, 64px), calc((100% - 1600px) / 2));
+    }
+    header { grid-area: intro;    width: auto; }
+    main   { grid-area: releases; width: auto; }
+    footer { grid-area: footer; align-self: end; }
+
+    /* Puts the table's top line level with the line under SMOKE in the logo.
+       7.17% = how far down the logo that line sits (as a share of its width);
+       24.5px = how far down the table that line sits (heading height). */
+    .releases { margin-top: calc(7.17% - 24.5px); }
+  }
+</style>
 </head>
 <body>
-<x-dc>
-<helmet><style>html,body{margin:0;background:#fe7b2c}a{color:#fff;text-decoration:none}a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}</style><title>Smoke Fills the Air</title></helmet>
-<main style="position:relative;overflow:hidden;min-height:100vh;width:100%;background:#fe7b2c;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;box-sizing:border-box;padding:8vh 6vw;color:#fff">
-  <img src="assets/g-house.png" alt="" style="position:relative;display:block;width:min(420px,62vw,calc(42vh*1.297));height:auto;transform:translateX(-17%)">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;margin-top:clamp(28px,5vh,48px);width:min(520px,86vw)">
-    <h1 style="margin:0;font-size:clamp(26px,4.2vw,44px);font-weight:700;letter-spacing:0.01em;line-height:1;text-align:center;text-wrap:balance">SMOKE FILLS THE AIR</h1>
-    <div style="width:100%;height:3px;background:#fff"></div>
-  </div>
-  <p style="position:relative;margin:clamp(20px,3.5vh,32px) 0 0;font-size:clamp(15px,1.4vw,18px);font-weight:400;letter-spacing:0.04em;text-align:center">contact: <a style="white-space:nowrap" href="mailto:matthew@smokefillstheair.com">matthew@smokefillstheair.com</a></p>
-  <a href="https://www.instagram.com/smokefillstheair/" target="_blank" rel="noopener" aria-label="Instagram" style="position:absolute;bottom:clamp(20px,4vh,36px);left:50%;transform:translateX(-50%);display:flex;width:44px;height:44px;align-items:center;justify-content:center;color:#fff">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"></rect><circle cx="12" cy="12" r="4.5"></circle><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"></circle></svg>
-  </a>
+
+<header>
+  <h1 class="logo">
+    <img src="assets/sfta-text-logo-blue.svg" alt="Smoke Fills the Air" width="5276" height="3248">
+  </h1>
+
+  <section class="copy">
+    <blockquote><p>“I know there’s no other world / mountains and websites”</p><cite>Mount Eerie - Through the Trees Pt. 2</cite></blockquote>
+  </section>
+</header>
+
+<main>
+  <!-- RELEASES: one <tr>…</tr> block per release.
+       To add one, copy a whole <tr>…</tr> block and change the text.
+       Dates are yyyy-mm-dd: put the same date in datetime="…" and between the tags. -->
+  <table class="releases">
+    <thead>
+      <tr>
+        <th scope="col">cat. no.</th>
+        <th scope="col">artist</th>
+        <th scope="col">title</th>
+        <th scope="col" class="date">date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cat">SMOKE-001</td>
+        <td class="artist">peter o sullivan</td>
+        <td class="title"><a href="https://found.ee/4D33d" target="_blank" rel="noopener">the best i can do</a></td>
+        <td class="date"><time datetime="2026-11-16">2026-11-16</time></td>
+      </tr>
+      <tr>
+        <td class="cat">SMOKE-002</td>
+        <td class="artist">—</td>
+        <td class="title">—</td>
+        <td class="date"><time datetime="2027">2027</time></td>
+      </tr>
+    </tbody>
+  </table>
 </main>
-</x-dc>
+
+<footer>
+  <p class="contact">contact: <a href="mailto:matthew@smokefillstheair.com">matthew@smokefillstheair.com</a></p>
+  <a class="instagram" href="https://www.instagram.com/smokefillstheair/" target="_blank" rel="noopener" aria-label="Instagram">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+  </a>
+</footer>
+
 </body>
 </html>
