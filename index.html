@@ -149,6 +149,94 @@
   }
 
   /* ============================================================
+     Mailing list (Mailchimp)
+     Sits under the releases table and copies its look: a small
+     label over a line, then one row with the email box and button
+     ============================================================ */
+  .signup { margin-top: clamp(32px, 6vh, 56px); }
+  .signup form { margin: 0; }
+
+  /* same size and spacing as the table's column headings */
+  .signup-label {
+    display: block;
+    padding-bottom: 4px;
+    border-bottom: var(--line) solid var(--white);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .signup-row { display: flex; align-items: flex-start; }
+  .signup-row .mc-field-group { flex: 1 1 auto; min-width: 0; }
+
+  /* the email box and button are exactly as tall as a table row,
+     so their text sits on the same baseline as the releases */
+  .signup-email,
+  .signup-button {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    height: calc(3.15em + var(--line));
+    margin: 0;
+    padding: 1.4em 0 0.3em;
+    border: 0;
+    border-bottom: var(--line) solid var(--white);
+    border-radius: 0;
+    background: transparent;
+    color: var(--white);
+    font: inherit;
+    line-height: normal;
+  }
+  .signup-email { width: 100%; outline: none; }
+  .signup-email::placeholder { color: var(--white); opacity: 0.6; }
+
+  /* underlined like the release title links */
+  .signup-button {
+    padding-left: 1em;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .signup-button:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+
+  /* typing in the box: the row's line turns into a blue line like the logo's */
+  .signup-email:focus {
+    border-bottom: 2px solid var(--blue);
+    padding-bottom: calc(0.3em + var(--line) - 2px);
+  }
+  .signup-row:has(.signup-email:focus) .signup-button {
+    border-bottom: 2px solid var(--blue);
+    padding-bottom: calc(0.3em + var(--line) - 2px);
+  }
+
+  /* stop Chrome and Safari painting a pale box over a remembered email */
+  .signup-email:-webkit-autofill,
+  .signup-email:-webkit-autofill:hover,
+  .signup-email:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--white);
+    caret-color: var(--white);
+    -webkit-box-shadow: 0 0 0 1000px var(--orange) inset;
+    transition: background-color 0s 600000s, color 0s 600000s;
+  }
+
+  /* Mailchimp's messages ("Please enter a valid email address.",
+     "Thank you for subscribing!"): heading-sized, same white */
+  .signup div.mce_inline_error,
+  .signup #mce_tmp_error_msg,
+  .signup .response {
+    margin: 10px 0 0;
+    padding: 0;
+    background: none;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .signup .response a,
+  .signup #mce_tmp_error_msg a { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ============================================================
      Desktop: releases on the left; logo, copy and contact on the right
      ============================================================ */
   @media (min-width: 1200px) {
@@ -173,6 +261,15 @@
        7.17% = how far down the logo that line sits (as a share of its width);
        24.5px = how far down the table that line sits (heading height). */
     .releases { margin-top: calc(7.17% - 24.5px); }
+
+    /* Puts the line under the email box level with the line under AIR in the logo.
+       59.25% = how far down the logo that line sits (as a share of its width);
+       82.2px = how far down the signup that line sits (label + one row).
+       If the releases list grows past that point, the signup simply follows it. */
+    main { display: grid; }
+    main::before { content: ""; grid-area: 1 / 1; padding-top: calc(59.25% - 82.2px); }
+    .releases { grid-area: 1 / 1; align-self: start; margin-bottom: clamp(48px, 8vh, 80px); }
+    .signup { grid-area: 2 / 1; margin-top: 0; }
   }
 </style>
 </head>
@@ -216,6 +313,27 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- MAILING LIST: signups go straight to your Mailchimp audience. -->
+  <section class="signup" id="mc_embed_signup">
+    <form action="https://smokefillstheair.us18.list-manage.com/subscribe/post?u=f7ceae5160042b74026309663&amp;id=3e0a19b11e&amp;f_id=0037a8e6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+      <label class="signup-label" for="mce-EMAIL">mailing list</label>
+      <div class="signup-row">
+        <div class="mc-field-group">
+          <input class="signup-email required email" type="email" name="EMAIL" id="mce-EMAIL" required value="" placeholder="email address" autocomplete="email" spellcheck="false" autocapitalize="off">
+        </div>
+        <button class="signup-button" type="submit" name="subscribe" id="mc-embedded-subscribe">subscribe</button>
+      </div>
+      <!-- bot trap: people never see this, it catches spam signups. Don't remove it. -->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true">
+        <input type="text" name="b_f7ceae5160042b74026309663_3e0a19b11e" tabindex="-1" value="">
+      </div>
+      <div id="mce-responses" aria-live="polite">
+        <div class="response" id="mce-error-response" style="display: none;"></div>
+        <div class="response" id="mce-success-response" style="display: none;"></div>
+      </div>
+    </form>
+  </section>
 </main>
 
 <footer>
@@ -224,6 +342,23 @@
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
   </a>
 </footer>
+
+<!-- Mailchimp's form checker. It brings its own copy of jQuery; the field list is
+     only set up once it has loaded, which avoids "jQuery is not defined".
+     If it's blocked, the form still works: it opens Mailchimp in a new tab. -->
+<script>
+  (function () {
+    function mcInit() {
+      if (!window.jQuery) return;
+      (function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(window.jQuery));
+      window.$mcj = window.jQuery.noConflict(true);
+    }
+    var s = document.createElement('script');
+    s.src = 'https://s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js';
+    s.onload = mcInit;
+    document.body.appendChild(s);
+  })();
+</script>
 
 </body>
 </html>
